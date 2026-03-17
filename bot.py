@@ -1,12 +1,13 @@
 # ============================================
 # SISTEMA COMPLETO: BITÁCORA POR VOZ AUTOMÁTICA
+# Transcripción vía Groq API (sin PyTorch local)
 # ============================================
 import os
 import json
 import uuid
-import whisper
 import datetime
 import pytz
+from groq import Groq
 from docx import Document
 from apscheduler.schedulers.background import BackgroundScheduler
 from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
@@ -14,10 +15,11 @@ from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 # ================= CONFIG =================
 TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
 CHAT_ID = int(os.environ["CHAT_ID"])
+GROQ_API_KEY = os.environ["GROQ_API_KEY"]
 ZONA = pytz.timezone("America/Matamoros")
 BITACORA_FILE = "bitacora_data.json"
 
-model = whisper.load_model("base")
+groq_client = Groq(api_key=GROQ_API_KEY)
 
 # ================= PERSISTENCIA =================
 def cargar_bitacora():
@@ -44,8 +46,14 @@ def periodo_actual():
     return "12-25" if 12 <= dia <= 25 else "26-11"
 
 def transcribir_audio(file_path):
-    result = model.transcribe(file_path)
-    return result["text"]
+    with open(file_path, "rb") as f:
+        transcripcion = groq_client.audio.transcriptions.create(
+            file=(file_path, f.read()),
+            model="whisper-large-v3",
+            language="es",
+            response_format="text"
+        )
+    return transcripcion
 
 def procesar_texto(texto):
     import re
