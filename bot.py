@@ -12,8 +12,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 
 # ================= CONFIG =================
-TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
-CHAT_ID = int(os.environ["CHAT_ID"])
+TELEGRAM_TOKEN = os.environ["8668132168:AAFMfXijRqQ3fWHMI9zvO2BKuNZqZRqtShQ"]
+CHAT_ID = int(os.environ["572066566"])
 ZONA = pytz.timezone("America/Matamoros")
 BITACORA_FILE = "bitacora_data.json"
 
