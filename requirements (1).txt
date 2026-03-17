@@ -1,0 +1,6 @@
+setuptools
+python-telegram-bot==13.15
+groq
+python-docx
+apscheduler
+pytz
